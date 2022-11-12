@@ -1,0 +1,136 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model cliente {
+  idcliente String      @id
+  firstname String
+  lastname  String
+  telefone  String?
+  birth     DateTime?   @db.Date
+  email     String      @unique
+  address   address[]
+  cart      cart[]
+  notavenda notavenda[]
+  payment   payment[]
+}
+
+model funcionario {
+  idfuncionario String   @id
+  cpf           String   @unique
+  nome          String
+  endereco      String
+  telefone      String
+  salario       Float    @db.Real
+  funcao        String
+  dataentrada   DateTime @db.Date
+  situacao      String
+  post          post[]
+}
+
+model notavenda {
+  idnotavenda                                 String   @id
+  idcliente                                   String
+  produtos                                    Json?    @db.Json
+  total                                       Float    @db.Real
+  subtotal                                    Float    @db.Real
+  discount                                    Float    @db.Real
+  delivery                                    Float    @db.Real
+  deliverystatus                              Int?
+  paymentmethod                               String?
+  quantidade                                  Int
+  data                                        DateTime @db.Date
+  idshipingaddress                            String?
+  idbillingaddress                            String?
+  idpayment                                   String?
+  address_addressTonotavenda_idbillingaddress address? @relation("addressTonotavenda_idbillingaddress", fields: [idbillingaddress], references: [idaddress], onDelete: NoAction, onUpdate: NoAction)
+  cliente                                     cliente  @relation(fields: [idcliente], references: [idcliente], onDelete: NoAction, onUpdate: NoAction)
+  payment                                     payment? @relation(fields: [idpayment], references: [idpayment], onDelete: NoAction, onUpdate: NoAction)
+  address_addressTonotavenda_idshipingaddress address? @relation("addressTonotavenda_idshipingaddress", fields: [idshipingaddress], references: [idaddress], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model produto {
+  idproduto          String           @id
+  idcategoriaproduto String
+  nome               String           @unique
+  foto               String?
+  descricao          String
+  valor              Float            @db.Real
+  quantidade         Int
+  datareposicao      DateTime?        @db.Date
+  options            Json?            @db.Json
+  categoriaproduto   categoriaproduto @relation(fields: [idcategoriaproduto], references: [idcategoriaproduto], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model categoriaproduto {
+  idcategoriaproduto String    @id
+  nome               String
+  produto            produto[]
+}
+
+model categoriapost {
+  idcategoriapost String @id
+  name            String
+  post            post[]
+}
+
+model post {
+  idpost          String        @id
+  idcategoriapost String
+  idowner         String
+  title           String        @unique
+  foto            String?
+  description     String
+  date            DateTime?     @db.Date
+  categoriapost   categoriapost @relation(fields: [idcategoriapost], references: [idcategoriapost], onDelete: NoAction, onUpdate: NoAction)
+  funcionario     funcionario   @relation(fields: [idowner], references: [idfuncionario], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model address {
+  idaddress                                     String      @id
+  idcliente                                     String
+  addressone                                    String
+  addresstwo                                    String?
+  city                                          String
+  state                                         String
+  postalcode                                    Int
+  cliente                                       cliente     @relation(fields: [idcliente], references: [idcliente], onDelete: NoAction, onUpdate: NoAction)
+  cart_addressTocart_idbillingaddress           cart[]      @relation("addressTocart_idbillingaddress")
+  cart_addressTocart_iddeliveryaddress          cart[]      @relation("addressTocart_iddeliveryaddress")
+  notavenda_addressTonotavenda_idbillingaddress notavenda[] @relation("addressTonotavenda_idbillingaddress")
+  notavenda_addressTonotavenda_idshipingaddress notavenda[] @relation("addressTonotavenda_idshipingaddress")
+}
+
+model cart {
+  idcart                                  String   @id
+  idcliente                               String
+  idpayment                               String
+  iddeliveryaddress                       String
+  idbillingaddress                        String
+  produtos                                String[]
+  total                                   Float    @db.Real
+  subtotal                                Float    @db.Real
+  discount                                Float    @db.Real
+  delivery                                Float    @db.Real
+  address_addressTocart_idbillingaddress  address  @relation("addressTocart_idbillingaddress", fields: [idbillingaddress], references: [idaddress], onDelete: NoAction, onUpdate: NoAction)
+  cliente                                 cliente  @relation(fields: [idcliente], references: [idcliente], onDelete: NoAction, onUpdate: NoAction)
+  address_addressTocart_iddeliveryaddress address  @relation("addressTocart_iddeliveryaddress", fields: [iddeliveryaddress], references: [idaddress], onDelete: NoAction, onUpdate: NoAction)
+  payment                                 payment  @relation(fields: [idpayment], references: [idpayment], onDelete: NoAction, onUpdate: NoAction)
+}
+
+model payment {
+  idpayment      String      @id
+  idcliente      String
+  cardname       String
+  cardnumber     Int?
+  expirationdate String
+  cvv            String
+  cliente        cliente     @relation(fields: [idcliente], references: [idcliente], onDelete: NoAction, onUpdate: NoAction)
+  cart           cart[]
+  notavenda      notavenda[]
+}

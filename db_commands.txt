@@ -1,0 +1,156 @@
+drop table notacompra;
+drop table notavenda;
+drop table animal;
+drop table cliente;
+drop table funcionario;
+drop table produto;
+drop table servico;
+drop table fornecedor;
+drop table raca;
+drop table especie;
+drop table categoriaproduto;
+drop table categoriaservico;
+
+select * from categoriaproduto;
+select * from fornecedor;
+select * from funcionario;
+select * from notacompra;
+select * from notavenda;
+select * from produto;
+select * from servico;
+select * from cliente;
+select * from animal;
+select * from especie;
+select * from raca;
+
+select SUM(nc.quantidade) as quantidade_total, SUM(nc.valor) as valor_total, fc.nome, nc.datapedido
+from notacompra as nc
+inner join funcionario as fc
+on nc.idfuncionario = fc.idfuncionario
+group by fc.nome, nc.datapedido
+
+select count(nv.idservico) as quantidade_servicos, SUM(nv.valor) as valor_total, servico.nome, nv.data
+from notavenda as nv
+inner join servico
+on nv.idservico = servico.idservico
+group by servico.nome, nv.data
+
+select count(animal.idraca) as quantidade_animais, raca.nome
+from animal
+inner join raca
+on animal.idraca = raca.idraca
+group by raca.nome
+
+CREATE TABLE NotaCompra (
+  idNotaCompra Text PRIMARY KEY,
+  idFornecedor Text NOT NULL,
+  idProduto Text NOT NULL,
+  idFuncionario Text NOT NULL,
+  valor Float(2) NOT NULL,
+  quantidade INT NOT NULL,
+  dataEntrega Date,
+  dataPedido Date NOT NULL
+  );
+  
+  CREATE TABLE Funcionario (
+  idFuncionario Text PRIMARY KEY,
+  cpf Char(14) NOT NULL UNIQUE,
+  nome Char(50) NOT NULL,
+  endereco Char(75) NOT NULL,
+  telefone Char(15) NOT NULL,
+  salario Float(2) NOT NULL,
+  funcao Char(50) NOT NULL,
+  dataEntrada Date NOT NULL,
+  situacao Char(50) NOT NULL
+  );
+  
+  CREATE TABLE Produto (
+  idProduto Text PRIMARY KEY,
+  idCategoriaProduto Text NOT NULL,
+  nome Char(50) NOT NULL UNIQUE,
+  foto Text,
+  descricao Char(256) NOT NULL,
+  valor Float(2) NOT NULL,
+  quantidade INT NOT NULL,
+  dataReposicao Date
+  );
+  
+  CREATE TABLE NotaVenda (
+  idNotaVenda Text PRIMARY KEY,
+  idProduto Text,
+  idCliente Text NOT NULL,
+  idServico Text,
+  idFuncionario Text NOT NULL,
+  valor INT NOT NULL,
+  quantidade INT NOT NULL,
+  data Date NOT NULL,
+  FOREIGN KEY(idProduto) REFERENCES Produto (idProduto),
+  FOREIGN KEY(idFuncionario) REFERENCES Funcionario (idFuncionario)
+  );
+  
+  CREATE TABLE CategoriaProduto (
+  idCategoriaProduto Text PRIMARY KEY,
+  nome Char(50) NOT NULL
+  );
+  
+  CREATE TABLE Cliente (
+  idCliente Text PRIMARY KEY,
+  nome Char(50) NOT NULL,
+  cpf Char(14) NOT NULL UNIQUE,
+  endereco Char(75) NOT NULL,
+  telefone Char(15) NOT NULL
+  );
+  
+  CREATE TABLE Servico (
+  idServico Text PRIMARY KEY,
+  idCategoriaServico Text NOT NULL,
+  nome Char(50) NOT NULL UNIQUE,
+  foto Text,
+  descricao Char(256) NOT NULL,
+  valor Float(2) NOT NULL
+  );
+  
+  CREATE TABLE CategoriaServico (
+  idCategoriaServico Text PRIMARY KEY,
+  nome Char(50) NOT NULL
+  );
+  
+  CREATE TABLE Animal (
+  idAnimal Text PRIMARY KEY,
+  idRaca Text NOT NULL,
+  idCliente Text NOT NULL,
+  nome Char(50) NOT NULL,
+  foto Text,
+  dataNascimento Date,
+  cor Char(15) NOT NULL,
+  genero Char(1) NOT NULL
+  );
+  
+  CREATE TABLE Raca (
+  idRaca Text PRIMARY KEY,
+  idEspecie Text NOT NULL,
+  nome Char(50) NOT NULL
+  );
+  
+  CREATE TABLE Fornecedor (
+  idFornecedor Text PRIMARY KEY,
+  cpf Char(14) NOT NULL UNIQUE,
+  telefone Char(15) NOT NULL,
+  nome Char(50) NOT NULL,
+  endereco Char(75) NOT NULL
+  );
+  
+  CREATE TABLE Especie (
+  idEspecie Text PRIMARY KEY,
+  nome Char(50) NOT NULL UNIQUE
+  );
+  
+  ALTER TABLE NotaCompra ADD FOREIGN KEY(idFornecedor) REFERENCES Fornecedor (idFornecedor);
+  ALTER TABLE NotaCompra ADD FOREIGN KEY(idProduto) REFERENCES Produto (idProduto);
+  ALTER TABLE NotaCompra ADD FOREIGN KEY(idFuncionario) REFERENCES Funcionario (idFuncionario);
+  ALTER TABLE Produto ADD FOREIGN KEY(idCategoriaProduto) REFERENCES CategoriaProduto (idCategoriaProduto);
+  ALTER TABLE NotaVenda ADD FOREIGN KEY(idCliente) REFERENCES Cliente (idCliente);
+  ALTER TABLE NotaVenda ADD FOREIGN KEY(idServico) REFERENCES Servico (idServico);
+  ALTER TABLE Servico ADD FOREIGN KEY(idCategoriaServico) REFERENCES CategoriaServico (idCategoriaServico);
+  ALTER TABLE Animal ADD FOREIGN KEY(idRaca) REFERENCES Raca (idRaca);
+  ALTER TABLE Raca ADD FOREIGN KEY(idEspecie) REFERENCES Especie (idEspecie);
