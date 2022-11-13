@@ -1,0 +1,160 @@
+drop table notacompra;
+drop table notavenda;
+drop table cliente CASCADE;
+drop table produto;
+drop table fornecedor;
+drop table categoriaproduto;
+drop table cart;
+drop table post;
+drop table address;
+drop table categoriapost;
+drop table payment;
+drop table promotion;
+
+insert into promotion (idPromotion, nome, amount) values ("123", "TESTE50", 50);
+
+select * from promotion;
+select * from categoriaproduto;
+select * from notavenda;
+select * from address;
+select * from produto;
+select * from cart;
+select * from cliente;
+
+create table Promotion(
+idPromotion text primary key,
+nome text unique not null,
+amount Float(2)
+);
+
+   CREATE TABLE Cart (
+  idCart Text PRIMARY KEY,
+  idCliente Text NOT NULL,
+  idPayment Text,
+  idDeliveryAddress Text,
+  idBillingAddress Text,
+  produtos json,
+  total Float(2),
+  subtotal Float(2),
+  discount Float(2),
+  delivery Float(2),
+  
+  );
+ 
+  CREATE TABLE Produto (
+  idProduto Text PRIMARY KEY,
+  idCategoriaProduto Text NOT NULL,
+  nome Text NOT NULL UNIQUE,
+  options json,
+  foto Text,
+  descricao Text NOT NULL,
+  valor Float(2) NOT NULL,
+  quantidade INT NOT NULL,
+  peso Int,
+  altura Int,
+  largura Int,
+  comprimento Int,
+  dataReposicao Date
+  );
+ 
+  CREATE TABLE Address (
+  idAddress Text PRIMARY KEY,
+  idCliente Text NOT NULL,
+  addressOne Text NOT NULL,
+  addressTwo Text,
+  city Text not NULL,
+  state Text NOT NULL,
+  postalCode INT NOT NULL
+  );
+ 
+ CREATE TABLE Payment (
+  idPayment Text PRIMARY KEY,
+  idCliente Text NOT NULL,
+  cardName Text NOT NULL,
+  cardNumber INT,
+  expirationDate Text not NULL,
+  cvv Text not NULL
+  );
+ 
+  CREATE TABLE Post (
+  idPost Text PRIMARY KEY,
+  idCategoriaPost Text NOT NULL,
+  idOwner Text NOT NULL,
+  title Text NOT NULL UNIQUE,
+  foto Text,
+  description TEXT NOT NULL,
+  date Date
+  );
+  
+  CREATE TABLE NotaVenda (
+  idNotaVenda Text PRIMARY KEY,
+  idCliente Text NOT NULL,
+  idShipingAddress Text NOT NULL,
+  idBillingAddress Text NOT NULL,
+  idPayment Text NOT NULL,
+  produtos json,
+  total Float(2) NOT NULL,
+  subtotal Float(2) NOT NULL,
+  discount Float(2) NOT NULL,
+  delivery Float(2) NOT NULL,
+  deliveryStatus INT,
+  paymentMethod text,
+  quantidade INT NOT NULL,
+  data Date NOT NULL
+  );
+  
+   CREATE TABLE CategoriaPost (
+  idCategoriaPost Text PRIMARY KEY,
+  name Text NOT NULL
+  );
+ 
+  CREATE TABLE CategoriaProduto (
+  idCategoriaProduto Text PRIMARY KEY,
+  nome Text NOT NULL
+  );
+  
+  CREATE TABLE Cliente (
+  idCliente Text PRIMARY KEY,
+  firstname Text NOT NULL,
+  lastname Text NOT NULL,
+  telefone Text,
+  birth Date,
+  email text not null UNIQUE
+  );
+  
+
+  ALTER TABLE Produto ADD FOREIGN KEY(idCategoriaProduto) REFERENCES CategoriaProduto (idCategoriaProduto);
+  ALTER TABLE NotaVenda ADD FOREIGN KEY(idCliente) REFERENCES Cliente (idCliente);
+ ALTER TABLE Post ADD FOREIGN KEY(idCategoriaPost) REFERENCES CategoriaPost (idCategoriaPost);
+ALTER TABLE Post ADD FOREIGN KEY(idOwner) REFERENCES Funcionario (idFuncionario);
+ALTER TABLE Address ADD FOREIGN KEY(idCliente) REFERENCES Cliente (idCliente);
+ALTER TABLE Payment ADD FOREIGN KEY(idCliente) REFERENCES Cliente (idCliente);
+ALTER TABLE Cart ADD FOREIGN KEY(idCliente) REFERENCES Cliente (idCliente);
+ALTER TABLE Cart ADD FOREIGN KEY(idPayment) REFERENCES Payment (idPayment);
+ALTER TABLE Cart ADD FOREIGN KEY(idDeliveryAddress) REFERENCES Address (idAddress);
+ALTER TABLE Cart ADD FOREIGN KEY(idBillingAddress) REFERENCES Address (idAddress);
+ALTER TABLE NotaVenda ADD FOREIGN KEY(idShipingAddress) REFERENCES Address (idAddress);
+ALTER TABLE NotaVenda ADD FOREIGN KEY(idBillingAddress) REFERENCES Address (idAddress);
+ALTER TABLE NotaVenda ADD FOREIGN KEY(idPayment) REFERENCES Payment (idPayment);
+
+ CREATE TABLE NotaCompra (
+  idNotaCompra Text PRIMARY KEY,
+  idFornecedor Text NOT NULL,
+  idProduto Text NOT NULL,
+  total Float(2) NOT NULL,
+  delivery Float(2) NOT NULL,
+  quantidade INT NOT NULL,
+  dataEntrega Date,
+  dataPedido Date NOT NULL
+  );
+ 
+  CREATE TABLE Fornecedor (
+  idFornecedor Text PRIMARY KEY,
+  cpf Text NOT NULL UNIQUE,
+  telefone Text NOT NULL,
+  nome Text NOT NULL,
+  endereco Text NOT NULL
+  );
+  
+   ALTER TABLE NotaCompra ADD FOREIGN KEY(idFornecedor) REFERENCES Fornecedor (idFornecedor);
+  ALTER TABLE NotaCompra ADD FOREIGN KEY(idProduto) REFERENCES Produto (idProduto);

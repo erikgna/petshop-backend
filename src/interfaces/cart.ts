@@ -1,3 +1,5 @@
+import { IAddress } from "./address";
+
 export interface ICart {
   idcart: string;
   idcliente: string;
@@ -9,4 +11,9 @@ export interface ICart {
   subtotal: number;
   discount: number;
   delivery: number;
+}
+
+export interface ICartUser extends ICart {
+  address_addressTocart_idbillingaddress: IAddress;
+  address_addressTocart_iddeliveryaddress: IAddress;
 }
