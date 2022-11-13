@@ -6,21 +6,26 @@ import {
   updateOne,
   deleteOne,
   findAllOffset,
+  findAllUser,
 } from "../models/address";
 
 import { generateUUID } from "../utils/uid";
 
 export class AddressController {
+  static async getOne(id: string) {
+    return await findOne(id);
+  }
+
+  static async getAllUser(id: string) {
+    return await findAllUser(id);
+  }
+
   static async getAll() {
     return await findAll();
   }
 
   static async getOffset(start: number, end: number) {
     return await findAllOffset(start, end);
-  }
-
-  static async getOne(id: string) {
-    return await findOne(id);
   }
 
   static async create(item: IAddress) {

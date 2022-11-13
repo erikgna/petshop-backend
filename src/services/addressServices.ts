@@ -2,6 +2,26 @@ import { Request, Response } from "express";
 import { AddressController } from "../controllers/addressController";
 
 export class AddressService {
+  public static getOne = async (req: Request, res: Response) => {
+    try {
+      const result = await AddressController.getOne(req.params["id"]);
+
+      res.status(200).json(result);
+    } catch (error) {
+      res.status(500).json("Internal error");
+    }
+  };
+
+  public static getAllUser = async (req: Request, res: Response) => {
+    try {
+      const result = await AddressController.getAllUser(req.params["id"]);
+
+      res.status(200).json(result);
+    } catch (error) {
+      res.status(500).json("Internal error");
+    }
+  };
+
   public static getAll = async (req: Request, res: Response) => {
     try {
       const result = await AddressController.getAll();
@@ -17,16 +37,6 @@ export class AddressService {
       const start: number = parseInt(req.params["start"]);
       const end: number = parseInt(req.params["end"]);
       const result = await AddressController.getOffset(start, end);
-
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(500).json("Internal error");
-    }
-  };
-
-  public static getOne = async (req: Request, res: Response) => {
-    try {
-      const result = await AddressController.getOne(req.params["id"]);
 
       res.status(200).json(result);
     } catch (error) {

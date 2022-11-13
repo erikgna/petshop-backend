@@ -3,8 +3,10 @@ import { CartService } from "../services/cartServices";
 
 const router = Router();
 
-router.get("/cart", CartService.getAll);
 router.get("/cart/:id", CartService.getOne);
+router.get("/cart/cep/:cep/:id", CartService.calculateDeilvery);
+
+router.get("/cart", CartService.getAll);
 router.get("/cart/:start/:end", CartService.getAllOffset);
 router.post("/cart", CartService.create);
 router.patch("/cart", CartService.edit);

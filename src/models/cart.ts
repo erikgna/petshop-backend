@@ -17,9 +17,19 @@ export async function findAllOffset(start: number, end: number) {
   return items;
 }
 
-export async function findOne(id: string) {
-  const item = await prisma.cart.findUnique({ where: { idcart: id } });
-  return item;
+export async function findOne(id: string): Promise<ICart | null> {
+  const item = (await prisma.cart.findFirst({
+    where: { idcliente: id },
+  })) as ICart;
+
+  item.subtotal = 0;
+  item.produtos.forEach((product) => {
+    item.subtotal = product["valor"] * product["quantity"] + item.subtotal;
+  });
+
+  item.total = item.delivery + item.subtotal - item.discount;
+
+  return item as ICart;
 }
 
 export async function createOne(data: ICart) {

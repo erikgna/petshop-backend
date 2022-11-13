@@ -2,6 +2,29 @@ import { Request, Response } from "express";
 import { CartController } from "../controllers/cartController";
 
 export class CartService {
+  public static getOne = async (req: Request, res: Response) => {
+    try {
+      const result = await CartController.getOne(req.params["id"]);
+
+      res.status(200).json(result);
+    } catch (error) {
+      res.status(500).json("Internal error");
+    }
+  };
+
+  public static calculateDeilvery = async (req: Request, res: Response) => {
+    try {
+      const result = await CartController.calculateDelivery(
+        req.params["cep"],
+        req.params["id"]
+      );
+
+      res.status(200).json(result);
+    } catch (error) {
+      res.status(500).json("Internal error");
+    }
+  };
+
   public static getAll = async (req: Request, res: Response) => {
     try {
       const result = await CartController.getAll();
@@ -17,16 +40,6 @@ export class CartService {
       const start: number = parseInt(req.params["start"]);
       const end: number = parseInt(req.params["end"]);
       const result = await CartController.getOffset(start, end);
-
-      res.status(200).json(result);
-    } catch (error) {
-      res.status(500).json("Internal error");
-    }
-  };
-
-  public static getOne = async (req: Request, res: Response) => {
-    try {
-      const result = await CartController.getOne(req.params["id"]);
 
       res.status(200).json(result);
     } catch (error) {

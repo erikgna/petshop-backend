@@ -4,7 +4,7 @@ export interface ICart {
   idpayment: string;
   iddeliveryaddress: string;
   idbillingaddress: string;
-  produtos: string[];
+  produtos: [];
   total: number;
   subtotal: number;
   discount: number;

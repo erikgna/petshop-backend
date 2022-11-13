@@ -3,6 +3,16 @@ import { IAddress } from "../interfaces/address";
 
 const prisma = new PrismaClient();
 
+export async function findOne(id: string) {
+  const item = await prisma.address.findFirst({ where: { idcliente: id } });
+  return item;
+}
+
+export async function findAllUser(id: string) {
+  const item = await prisma.address.findMany({ where: { idcliente: id } });
+  return item;
+}
+
 export async function findAll() {
   const items = await prisma.address.findMany();
   return items;
@@ -15,11 +25,6 @@ export async function findAllOffset(start: number, end: number) {
   });
 
   return items;
-}
-
-export async function findOne(id: string) {
-  const item = await prisma.address.findFirst({ where: { idcliente: id } });
-  return item;
 }
 
 export async function createOne(data: IAddress) {

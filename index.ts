@@ -56,17 +56,6 @@ app.listen(port, () =>
 
 //DATABASE_URL="postgresql://postgres:erik2202@localhost:5432/petshop?schema=public&connection_limit=5"
 
-//Post
-//Post Category
-
-//Address
-//Payment
-
-//Cart
-//Update Produto (Options)
-//Update Cliente
-
 //API de Pagamento
 //API Correios calcular frete
 //API Emissão de Nota Fiscal?
-// Firebase Auth
