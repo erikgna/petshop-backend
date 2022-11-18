@@ -3,17 +3,20 @@ import { IPost } from "../interfaces/post";
 
 const prisma = new PrismaClient();
 
-export async function findAll() {
-  const items = await prisma.post.findMany();
-  return items;
-}
-
-export async function findAllOffset(start: number, end: number) {
+export async function findPagination(start: number, end: number) {
   const items = await prisma.post.findMany({
     skip: start,
     take: end,
+    include: {
+      categoriapost: true,
+    },
   });
 
+  return items;
+}
+
+export async function findAll() {
+  const items = await prisma.post.findMany();
   return items;
 }
 

@@ -2,21 +2,22 @@ import { Request, Response } from "express";
 import { PostController } from "../controllers/postController";
 
 export class PostService {
-  public static getAll = async (req: Request, res: Response) => {
+  public static getPagination = async (req: Request, res: Response) => {
     try {
-      const result = await PostController.getAll();
+      const result = await PostController.getPagination(
+        parseInt(req.params["page"])
+      );
 
       res.status(200).json(result);
     } catch (error) {
+      console.log(error);
       res.status(500).json("Internal error");
     }
   };
 
-  public static getAllOffset = async (req: Request, res: Response) => {
+  public static getAll = async (req: Request, res: Response) => {
     try {
-      const start: number = parseInt(req.params["start"]);
-      const end: number = parseInt(req.params["end"]);
-      const result = await PostController.getOffset(start, end);
+      const result = await PostController.getAll();
 
       res.status(200).json(result);
     } catch (error) {

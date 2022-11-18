@@ -4,8 +4,9 @@ import { ICliente } from "./cliente";
 export interface INotaVenda {
   idnotavenda: string;
   idcliente: string;
-  idBillingAddress: string;
-  idShippingAddress: string;
+  idbillingaddress: string;
+  idpayment: string;
+  idshipingaddress: string;
   produtos: {
     id: string;
     total: number;

@@ -20,22 +20,12 @@ model cliente {
   payment   payment[]
 }
 
-model funcionario {
-  idfuncionario String   @id
-  cpf           String   @unique
-  nome          String
-  endereco      String
-  telefone      String
-  salario       Float    @db.Real
-  funcao        String
-  dataentrada   DateTime @db.Date
-  situacao      String
-  post          post[]
-}
-
 model notavenda {
   idnotavenda                                 String   @id
   idcliente                                   String
+  idshipingaddress                            String
+  idbillingaddress                            String
+  idpayment                                   String
   produtos                                    Json?    @db.Json
   total                                       Float    @db.Real
   subtotal                                    Float    @db.Real
@@ -45,29 +35,26 @@ model notavenda {
   paymentmethod                               String?
   quantidade                                  Int
   data                                        DateTime @db.Date
-  idshipingaddress                            String?
-  idbillingaddress                            String?
-  idpayment                                   String?
-  address_addressTonotavenda_idbillingaddress address? @relation("addressTonotavenda_idbillingaddress", fields: [idbillingaddress], references: [idaddress], onDelete: NoAction, onUpdate: NoAction)
+  address_addressTonotavenda_idbillingaddress address  @relation("addressTonotavenda_idbillingaddress", fields: [idbillingaddress], references: [idaddress], onDelete: NoAction, onUpdate: NoAction)
   cliente                                     cliente  @relation(fields: [idcliente], references: [idcliente], onDelete: NoAction, onUpdate: NoAction)
-  payment                                     payment? @relation(fields: [idpayment], references: [idpayment], onDelete: NoAction, onUpdate: NoAction)
-  address_addressTonotavenda_idshipingaddress address? @relation("addressTonotavenda_idshipingaddress", fields: [idshipingaddress], references: [idaddress], onDelete: NoAction, onUpdate: NoAction)
+  payment                                     payment  @relation(fields: [idpayment], references: [idpayment], onDelete: NoAction, onUpdate: NoAction)
+  address_addressTonotavenda_idshipingaddress address  @relation("addressTonotavenda_idshipingaddress", fields: [idshipingaddress], references: [idaddress], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model produto {
   idproduto          String           @id
   idcategoriaproduto String
   nome               String           @unique
+  options            Json?            @db.Json
   foto               String?
   descricao          String
   valor              Float            @db.Real
   quantidade         Int
-  datareposicao      DateTime?        @db.Date
-  options            Json?            @db.Json
   peso               Int?
   altura             Int?
   largura            Int?
   comprimento        Int?
+  datareposicao      DateTime?        @db.Date
   categoriaproduto   categoriaproduto @relation(fields: [idcategoriaproduto], references: [idcategoriaproduto], onDelete: NoAction, onUpdate: NoAction)
 }
 
@@ -86,13 +73,12 @@ model categoriapost {
 model post {
   idpost          String        @id
   idcategoriapost String
-  idowner         String
+  idowner         String?
   title           String        @unique
   foto            String?
   description     String
   date            DateTime?     @db.Date
   categoriapost   categoriapost @relation(fields: [idcategoriapost], references: [idcategoriapost], onDelete: NoAction, onUpdate: NoAction)
-  funcionario     funcionario   @relation(fields: [idowner], references: [idfuncionario], onDelete: NoAction, onUpdate: NoAction)
 }
 
 model address {
@@ -137,10 +123,4 @@ model payment {
   cliente        cliente     @relation(fields: [idcliente], references: [idcliente], onDelete: NoAction, onUpdate: NoAction)
   cart           cart[]
   notavenda      notavenda[]
-}
-
-model promotion {
-  idpromotion String @id
-  nome        String @unique
-  amount      Float? @db.Real
 }

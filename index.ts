@@ -13,11 +13,11 @@ import categoriaPost from "./src/routes/categoriaPostRoutes";
 
 import admin from "firebase-admin";
 
-const serviceAccount = require("../petshop-3871e-firebase-adminsdk-khdnf-2c5a74dcf1.json");
+// const serviceAccount = require("../petshop-3871e-firebase-adminsdk-khdnf-2c5a74dcf1.json");
 
-admin.initializeApp({
-  credential: admin.credential.cert(serviceAccount),
-});
+// admin.initializeApp({
+//   credential: admin.credential.cert(serviceAccount),
+// });
 
 const app: Application = express();
 

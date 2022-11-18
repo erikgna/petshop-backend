@@ -7,3 +7,8 @@ export interface IPost {
   description: string;
   date: Date;
 }
+
+export interface IPostUser {
+  posts: IPost[];
+  page: number;
+}

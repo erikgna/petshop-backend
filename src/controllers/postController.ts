@@ -1,11 +1,11 @@
-import { IPost } from "../interfaces/post";
+import { IPost, IPostUser } from "../interfaces/post";
 import {
   createOne,
   findAll,
   findOne,
   updateOne,
   deleteOne,
-  findAllOffset,
+  findPagination,
 } from "../models/post";
 import { createDate } from "../utils/date";
 import { saveBase64 } from "../utils/file";
@@ -16,8 +16,23 @@ export class PostController {
     return await findAll();
   }
 
-  static async getOffset(start: number, end: number) {
-    return await findAllOffset(start, end);
+  static async getPagination(page: number) {
+    const start = (page - 1) * 20;
+    const end = page * 20 + 1;
+
+    console.log(page);
+    const items = await findPagination(start, end);
+    console.log(items);
+    const posts: IPostUser = {
+      posts: items as unknown as IPost[],
+      page: items.length > 20 ? page + 1 : -1,
+    };
+
+    if (posts.posts.length > 20) {
+      posts.posts.pop();
+    }
+
+    return posts;
   }
 
   static async getOne(id: string) {
