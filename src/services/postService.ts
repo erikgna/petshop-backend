@@ -15,9 +15,21 @@ export class PostService {
     }
   };
 
-  public static getAll = async (req: Request, res: Response) => {
+  public static getSearch = async (req: Request, res: Response) => {
     try {
-      const result = await PostController.getAll();
+      const result = await PostController.getSearch(req.params["search"]);
+
+      res.status(200).json(result);
+    } catch (error) {
+      res.status(500).json("Internal error");
+    }
+  };
+
+  public static getSimiliarCategories = async (req: Request, res: Response) => {
+    try {
+      const result = await PostController.getSimiliarCategories(
+        req.params["category"]
+      );
 
       res.status(200).json(result);
     } catch (error) {
@@ -28,7 +40,6 @@ export class PostService {
   public static getOne = async (req: Request, res: Response) => {
     try {
       const result = await PostController.getOne(req.params["id"]);
-
       res.status(200).json(result);
     } catch (error) {
       res.status(500).json("Internal error");

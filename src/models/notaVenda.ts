@@ -34,7 +34,7 @@ export async function userFindOne(id: string) {
     ...item,
     billingAddress: item?.address_addressTonotavenda_idbillingaddress,
     shippingAddress: item?.address_addressTonotavenda_idshipingaddress,
-  } as INotaVendaUser;
+  };
 }
 
 export async function findAll() {

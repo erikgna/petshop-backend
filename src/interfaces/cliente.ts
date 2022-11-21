@@ -5,4 +5,5 @@ export interface ICliente {
   email: string;
   telefone?: string;
   birth?: Date;
+  savedPosts: any;
 }

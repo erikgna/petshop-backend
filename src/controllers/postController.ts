@@ -1,28 +1,23 @@
 import { IPost, IPostUser } from "../interfaces/post";
 import {
   createOne,
-  findAll,
+  fetchSimiliarCategories,
   findOne,
   updateOne,
   deleteOne,
   findPagination,
+  findSearch,
 } from "../models/post";
 import { createDate } from "../utils/date";
 import { saveBase64 } from "../utils/file";
 import { generateUUID } from "../utils/uid";
 
 export class PostController {
-  static async getAll() {
-    return await findAll();
-  }
-
   static async getPagination(page: number) {
     const start = (page - 1) * 20;
     const end = page * 20 + 1;
 
-    console.log(page);
     const items = await findPagination(start, end);
-    console.log(items);
     const posts: IPostUser = {
       posts: items as unknown as IPost[],
       page: items.length > 20 ? page + 1 : -1,
@@ -33,6 +28,14 @@ export class PostController {
     }
 
     return posts;
+  }
+
+  static async getSearch(search: string) {
+    return await findSearch(search);
+  }
+
+  static async getSimiliarCategories(category: string) {
+    return await fetchSimiliarCategories(category);
   }
 
   static async getOne(id: string) {
